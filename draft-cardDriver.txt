@@ -1,0 +1,207 @@
+import javafx.print.PageLayout;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.Collections;
+
+public class CardDriver {
+    public static void main(String[] args) {
+        Deck deck;
+        //**PRELIMINARY SETTINGS INITIALIZE GAMES AND PLAYERS
+        System.out.println("how many people will be playing today");
+
+        Scanner in = new Scanner(System.in);
+        int numPlayers = in.nextInt();
+        String[] names = new String[numPlayers];
+        Random rand = new Random();
+
+        for (int i = 0; i < (numPlayers); i++) {
+            Scanner scan = new Scanner(System.in);
+            System.out.println("please enter your names");
+            String name = scan.nextLine();
+            names[i] = name;
+        }
+
+        //CONNECTS STRING OF NAMES TO CREATE PLAYERS
+        ArrayList<OldMaidPlayer> players = new <OldMaidPlayer>ArrayList();
+        for (int i = 0; i < names.length; i++) {
+            OldMaidPlayer player1 = new OldMaidPlayer(names[i]);
+            System.out.println(player1);
+            players.add(player1);
+        }
+        Boolean boool= true;
+//        deck  = new Deck();
+        //call the instance the deck class which creates a deck object
+
+        //**PRELIMINARY SETTINGS INITIALIZE GAMES AND PLAYERS
+
+//
+//        deck  = new Deck();
+//        deck.shuffle();
+//        // shuffle deck
+//        //System.out.println(deck.toString());
+//
+////        //CONNECTS STRING OF NAMES TO CREATE PLAYERS
+////        ArrayList<OldMaidPlayer> players = new <OldMaidPlayer>ArrayList();
+////        for (int i = 0; i < names.length; i++) {
+////            OldMaidPlayer player1 = new OldMaidPlayer(names[i]);
+////            System.out.println(player1);
+////            players.add(player1);
+////        }
+//
+//        //DEALS DECK to people
+//        while (deck.getSize() > 0) {
+//            for (int i = 0; i < players.size(); i++) {
+//                if (deck.getSize() > 0) {
+//                    players.get(i).addCard(deck.deal());
+//                }
+//            }
+//        }
+//
+//        //why not! [players.get(i).checkPairs(players.get(i)];
+//        //or super.checkPairs()
+//
+//        //do duplicate METHOD and PRINT OUT CURRENT CARDS
+//        for (int i = 0; i < players.size(); i++) {
+////            System.out.println(names[i]);
+//            players.get(i).checkPairs();
+//            System.out.println(players.get(i).dealt());
+//        }
+//        //DO NOT know which player has removed cards
+//
+//        //**** SETS UP TRY & EXCEPT
+//        Scanner keepPlaying = new Scanner(System.in);
+//        System.out.println("READY TO BEGIN? YES-0 or NO-1");
+//        int yep = keepPlaying.nextInt();
+//        //Boolean boool;
+//        if (yep == 0) {
+//            boool=true;
+//        } else {
+//            boool = false;
+//        }
+//        //i+1>players.size()
+//        Boolean notWinner = false;
+
+        //DO GAME LOGIC
+        while (boool == true) {
+
+            deck  = new Deck();
+            deck.shuffle();
+            // shuffle deck
+            //System.out.println(deck.toString());
+
+//        //CONNECTS STRING OF NAMES TO CREATE PLAYERS
+//        ArrayList<OldMaidPlayer> players = new <OldMaidPlayer>ArrayList();
+//        for (int i = 0; i < names.length; i++) {
+//            OldMaidPlayer player1 = new OldMaidPlayer(names[i]);
+//            System.out.println(player1);
+//            players.add(player1);
+//        }
+
+            //DEALS DECK to people
+            while (deck.getSize() > 0) {
+                for (int i = 0; i < players.size(); i++) {
+                    if (deck.getSize() > 0) {
+                        players.get(i).addCard(deck.deal());
+                    }
+                }
+            }
+
+            //why not! [players.get(i).checkPairs(players.get(i)];
+            //or super.checkPairs()
+
+            //do duplicate METHOD and PRINT OUT CURRENT CARDS
+            for (int i = 0; i < players.size(); i++) {
+//            System.out.println(names[i]);
+                players.get(i).checkPairs();
+                System.out.println(players.get(i).dealt());
+            }
+            //DO NOT know which player has removed cards
+
+            //**** SETS UP TRY & EXCEPT
+            Scanner keepPlaying = new Scanner(System.in);
+            System.out.println("READY TO BEGIN? YES-0 or NO-1");
+            int yep = keepPlaying.nextInt();
+            //Boolean boool;
+            if (yep == 0) {
+                boool=true;
+            } else {
+                boool = false;
+            }
+            //i+1>players.size()
+            Boolean notWinner = false;
+
+            //create deck, take card out, shuffle, deal 2 players, rm duplicates, start the game
+            Collections.shuffle(players);
+            while (!notWinner) {
+                for (int i = 0; i < players.size(); i++) {
+                    //System.out.println(players.get(i).getName());
+                    Card passed;
+                    int personGrabbed;
+                    if (i == players.size() - 1) {
+                        players.get(0);
+                        passed = players.get(0).giving();
+                    } else {
+                        personGrabbed = i + 1;
+                        passed = players.get(personGrabbed).giving();
+                    }
+                    //Card passed= players.get(i+1).giving();
+                    players.get(i).addCard(passed);
+                    players.get(i).shuffling();
+                    players.get(i).checkPairs();
+                    System.out.println("********* "+players.get(i).getName() + "ROUND *********");
+
+                    //PLAYER find winner this block not working
+                    System.out.println(players.get(i).getName() +"NUM CARDS: " + players.get(i).dealt().size());
+                    if (players.get(i).dealt().size() == 0) {
+                        System.out.println(players.get(i).getName() + " IS the winner");
+                        if (players.get(i).getTotalPoints()<1)
+                        { players.get(i).won();
+                          players.get(i).setPoints(3);
+                          players.get(i).getPoints();}
+                        //players.remove(i);
+                        else if(players.get(i).getTotalPoints()>1)
+                        {
+                            players.get(i).setPoints(1);
+                            players.get(i).won();
+                        }
+                        notWinner = !notWinner;
+                        break;
+                    }
+
+                    else if(players.get(i).dealt().size() ==1)
+                    {
+                        System.out.println(players.get(i).getName() + "is the LOSER");
+                        notWinner= !notWinner;
+                        break;
+                    }
+
+                }
+            }
+            System.out.println("do you want to play again? ENTER 1 for NO 0 for yes");
+            Scanner again = new Scanner(System.in);
+            int checkA = again.nextInt();
+            if (checkA == 0) {
+                boool = true;
+            } else{
+                boool = false;
+            }
+//
+//
+//
+//              else{
+//                deck  = new Deck();
+//                deck.shuffle();
+//                while (deck.getSize() > 0) {
+//                    for (int i = 0; i < players.size(); i++) {
+//                        if (deck.getSize() > 0) {
+//                            players.get(i).addCard(deck.deal());
+//                        }
+//                    }
+//                }
+//            }
+        }
+
+    }
+}
